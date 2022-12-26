@@ -1,51 +1,57 @@
-Bugzilla
-========
+CREATE DATABASE `bugzilla`
+DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-Bugzilla is free and open source web-based bug-tracking software that is
-developed by an active group of volunteers in the Mozilla community, and used
-by thousands of projects and companies around the world. It can be installed on
-Linux and other flavors of Unix, Windows or Mac OS X.
+CREATE USER 'bugzilla-owner'@'localhost';
+CREATE USER 'bugzilla-owner'@'127.0.0.1';
+CREATE USER 'bugzilla-owner'@'::1';
 
-Documentation
-=============
+SET PASSWORD
+FOR 'bugzilla-owner'@'localhost' = PASSWORD('Xyram@2019');
+SET PASSWORD
+FOR 'bugzilla-owner'@'127.0.0.1' = PASSWORD('Xyram@2019');
+SET PASSWORD
+FOR 'bugzilla-owner'@'::1' = PASSWORD('Xyram@2019');
 
-Bugzilla's comprehensive documentation, including installation instructions,
-can be found here:
-http://www.bugzilla.org/docs/
 
-Reporting Bugs
-==============
 
-Report bugs here:
-https://bugzilla.mozilla.org/enter_bug.cgi?product=Bugzilla
+GRANT ALL PRIVILEGES ON
+`bugzilla`.* TO 'bugzilla-owner'@'localhost' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON
+`bugzilla`.* TO 'bugzilla-owner'@'127.0.0.1' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON
+`bugzilla`.* TO 'bugzilla-owner'@'::1' WITH GRANT OPTION;
 
-(Please do not file test bugs in this installation of Bugzilla.)
+=============================================================================
+https://bugzilla.readthedocs.io/en/latest/installing/moving.html
 
-Mailing Lists
-=============
 
-Development:
-https://www.mozilla.org/en-US/about/forums/#dev-apps-bugzilla
+Add below lines in httpd.conf
 
-Support:
-https://www.mozilla.org/en-US/about/forums/#support-bugzilla
+Alias "/bugzilla/" "C:/bugzilla/"
+<Directory "C:/bugzilla">
+    ScriptInterpreterSource Registry-Strict
+    Options +ExecCGI +FollowSymLinks
+    DirectoryIndex index.cgi index.html
+    AllowOverride All
+    Require all granted
+</Directory>
 
-IRC
-===
+=================================================================================
 
-You can often find Bugzilla developers on IRC:
-irc://irc.mozilla.org/bugzilla
 
-License
-=======
+Add below line in my.ini
 
-This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ft_min_word_len=2
+------------------------------------------------
+make
 
-This Source Code Form is "Incompatible With Secondary Licenses", as
-defined by the Mozilla Public License, v. 2.0.
+max_allowed_packet=16M
 
-However, this is all only relevant to you if you want to modify the code and
-redistribute it. As with all open source software, there are no restrictions
-on running it, or on modifying it for your own purposes.
+====================================================================================
+You must create a key in the Windows registry
+------------------------------------------
+HKEY_CLASSES_ROOT\.cgi\Shell\ExecCGI\Command 
+
+    ADD with the default value pointing to the full path of perl.exe with a -T parameter
+   
+   C:\Strawberry\perl\bin\perl.exe -T
